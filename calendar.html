@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            margin: 30px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        select, button {
+            font-size: 1.2rem;
+            padding: 8px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background: #27ae60;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2ecc71;
+        }
+        .table {
+            margin: 20px auto;
+            width: 80%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #ecf0f1;
+            text-align: center;
+        }
+        th {
+            background: #16a085;
+            color: white;
+        }
+        td {
+            background: #2c3e50;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calendar</h1>
+        <p>Select Year</p>
+        <select class="year"></select>
+        <p>Select Month</p>
+        <select class="month">
+            <option>January</option>
+            <option>February</option>
+            <option>March</option>
+            <option>April</option>
+            <option>May</option>
+            <option>June</option>
+            <option>July</option>
+            <option>August</option>
+            <option>September</option>
+            <option>October</option>
+            <option>November</option>
+            <option>December</option>
+        </select>
+        <button class="click">OK</button>
+    </div>
+    <div class="table"></div>
+</body>
+<script>
+    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    
+    let btn = document.querySelector(".click");
+    let year_ele = document.querySelector(".year");
+    let month_ele = document.querySelector(".month");
+    let currYear = new Date().getFullYear();
+
+    for (let i = currYear - 25; i <= currYear + 175; i++) {
+        let option_ele = document.createElement("option");
+        option_ele.innerHTML = i;
+        year_ele.appendChild(option_ele);
+    }
+
+    btn.addEventListener("click", () => {
+        let month_detail = month_ele.value;
+        let year_detail = year_ele.value;
+        processCalender(month_detail, year_detail);
+    });
+
+    const processCalender = (month_detail, year_detail) => {
+        let tableP = document.querySelector(".table");
+        let monthNum = months.indexOf(month_detail);
+        let firstDay = new Date(year_detail, monthNum, 1).getDay();
+        let totalDays = new Date(year_detail, monthNum + 1, 0).getDate();
+
+        let calendarHTML = `<h2>${month_detail} ${year_detail}</h2>`;
+        calendarHTML += `<table><tr>`;
+
+        for (let i = 0; i < 7; i++) {
+            calendarHTML += `<th>${days[i]}</th>`;
+        }
+        calendarHTML += "</tr><tr>";
+
+        for (let i = 0; i < firstDay; i++) {
+            calendarHTML += "<td></td>";
+        }
+
+        let extraVar = firstDay;
+        for (let i = 1; i <= totalDays; i++) {
+            calendarHTML += `<td>${i}</td>`;
+            extraVar = (extraVar + 1) % 7;
+            if (extraVar === 0 && i !== totalDays) {
+                calendarHTML += "</tr><tr>";
+            }
+        }
+
+        while (extraVar > 0 && extraVar < 7) {
+            calendarHTML += "<td></td>";
+            extraVar++;
+        }
+
+        calendarHTML += "</tr></table>";
+        tableP.innerHTML = calendarHTML;
+    };
+</script>
+</html>
